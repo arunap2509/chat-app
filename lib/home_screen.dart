@@ -96,25 +96,31 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            label: "Chats",
-            icon: Icon(CupertinoIcons.chat_bubble_2_fill),
-          ),
-          BottomNavigationBarItem(
-            label: "Calls",
-            icon: Icon(CupertinoIcons.phone),
-          ),
-          BottomNavigationBarItem(
-            label: "Settings",
-            icon: Icon(CupertinoIcons.settings),
-          ),
-        ],
-        backgroundColor: Colors.black,
-        showUnselectedLabels: false,
-        showSelectedLabels: false,
-        unselectedItemColor: Colors.grey.shade600,
+      bottomNavigationBar: Theme(
+        data: Theme.of(context).copyWith(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+        ),
+        child: BottomNavigationBar(
+          items: const [
+            BottomNavigationBarItem(
+              label: "Chats",
+              icon: Icon(CupertinoIcons.chat_bubble_2_fill),
+            ),
+            BottomNavigationBarItem(
+              label: "Calls",
+              icon: Icon(CupertinoIcons.phone),
+            ),
+            BottomNavigationBarItem(
+              label: "Settings",
+              icon: Icon(CupertinoIcons.settings),
+            ),
+          ],
+          backgroundColor: Colors.black,
+          showUnselectedLabels: false,
+          showSelectedLabels: false,
+          unselectedItemColor: Colors.grey.shade600,
+        ),
       ),
     );
   }
@@ -123,7 +129,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return VisibilityDetector(
       key: const Key("chat-app-header"),
       onVisibilityChanged: (info) {
-        handleShowTabBarTitle(info.visibleFraction == 0);
+        var visiblePercentage = info.visibleFraction * 100;
+        handleShowTabBarTitle(visiblePercentage == 0);
       },
       child: Row(
         children: const [
@@ -161,12 +168,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget getChatListView() {
     return ListView.builder(
       scrollDirection: Axis.vertical,
-      itemCount: 40,
+      itemCount: 4,
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
       itemBuilder: (context, index) {
         var maxWidth = MediaQuery.of(context).size.width;
-        var dummyName = dummyNames[random.nextInt(dummyNames.length)];
+        var dummyName = dummyNames[index];
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -250,11 +257,11 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         SizedBox(
           width: (maxWidth - 70) * 0.80,
-          child: const Text(
+          child: Text(
             "hey there, long time no see, acvhlshlvbldbvfblbvbvlbvsvdbvlbblfblfbvbvbvfsdvlbfsvjbffrbzdbsbbljb",
             style: TextStyle(
-              color: Colors.white54,
-              fontWeight: FontWeight.w300,
+              color: (index % 2 != 0) ? Colors.blue : Colors.white54,
+              fontWeight: (index % 2 != 0) ? FontWeight.w500 : FontWeight.w300,
               fontSize: 13,
               height: 1.3,
             ),

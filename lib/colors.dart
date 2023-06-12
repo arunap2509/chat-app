@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const Color appBackgroundColor = Colors.black87;
-Color headerColor = HexColor("075e54");
+Color headerColor = HexColor("273443");
 
 class HexColor extends Color {
   static int _getColorFromHex(String hexColor) {
