@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.0
   visibility_detector: ^0.4.0+2
+  bloc:
+  flutter_bloc:
 
 dev_dependencies:
   flutter_test:
