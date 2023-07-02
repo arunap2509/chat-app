@@ -1,22 +1,33 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:chat_like_app/models/register_request.dart';
+import 'package:chat_like_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 part 'sign_up_event.dart';
 part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
+  late AuthService authService;
   SignUpBloc() : super(SignUpInitial()) {
+    authService = AuthService();
     on<SignUpButtonClickedEvent>(signUpButtonClickedEvent);
     on<SignUpLoginButtonClickedEvent>(signUpLoginButtonClickedEvent);
   }
 
   FutureOr<void> signUpButtonClickedEvent(
-      SignUpButtonClickedEvent event, Emitter<SignUpState> emit) {
-    // emit(SignUpRegistrationLoadingState());
-    emit(SignUpRegistrationSuccessState());
-    // emit(SignUpRegistrationFailedState());
+      SignUpButtonClickedEvent event, Emitter<SignUpState> emit) async {
+    emit(SignUpRegistrationLoadingState());
+    var request = RegisterRequest(
+        email: event.email, userName: event.userName, password: event.password);
+    var response = await authService.register(request);
+    if (response.success) {
+      emit(SignUpRegistrationSuccessState());
+    } else {
+      //emit(SignUpInitial());
+      emit(SignUpRegistrationFailedState(errors: response.errors!));
+    }
   }
 
   FutureOr<void> signUpLoginButtonClickedEvent(

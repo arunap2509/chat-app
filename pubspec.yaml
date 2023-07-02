@@ -13,6 +13,7 @@ dependencies:
   visibility_detector: ^0.4.0+2
   bloc:
   flutter_bloc:
+  http:
 
 dev_dependencies:
   flutter_test:

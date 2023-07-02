@@ -58,7 +58,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
         } else if (state is SignUpRegistrationFailedState) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text("Something went wrong"),
+              content: Column(
+                children: [
+                  for (int i = 0; i < state.errors.length; i++)
+                    Row(children: [
+                      const Text("\u2022"),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      Expanded(
+                        child: Text(
+                          state.errors[i],
+                        ), //text
+                      )
+                    ])
+                ],
+              ),
               backgroundColor: Colors.red.shade300,
             ),
           );
@@ -76,9 +91,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
               signupBloc: signupBloc,
             );
           case SignUpRegistrationLoadingState:
-            return const Scaffold(
+            return Scaffold(
               body: Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.white.withOpacity(0.1),
+                ),
               ),
             );
           default:
