@@ -1,7 +1,9 @@
 import 'package:chat_like_app/features/signup/ui/sign_up_screen.dart';
 import 'package:chat_like_app/home_screen.dart';
+import 'package:chat_like_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import '../../../common/component/input_field.dart';
 import '../../forgotpassword/ui/forgot_password_screen.dart';
@@ -17,7 +19,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late TextEditingController userNameController;
   late TextEditingController passwordController;
-  final LoginBloc bloc = LoginBloc();
 
   @override
   void initState() {
@@ -62,6 +63,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = LoginBloc(
+        authService: Provider.of<AuthService>(context, listen: false));
     return BlocConsumer<LoginBloc, LoginState>(
       bloc: bloc,
       buildWhen: (previous, current) => current is! LoginActionState,

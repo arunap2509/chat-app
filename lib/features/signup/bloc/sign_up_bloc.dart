@@ -9,9 +9,8 @@ part 'sign_up_event.dart';
 part 'sign_up_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  late AuthService authService;
-  SignUpBloc() : super(SignUpInitial()) {
-    authService = AuthService();
+  final AuthService authService;
+  SignUpBloc({required this.authService}) : super(SignUpInitial()) {
     on<SignUpButtonClickedEvent>(signUpButtonClickedEvent);
     on<SignUpLoginButtonClickedEvent>(signUpLoginButtonClickedEvent);
   }
@@ -25,7 +24,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     if (response.success) {
       emit(SignUpRegistrationSuccessState());
     } else {
-      //emit(SignUpInitial());
+      emit(SignUpRegistrationHideLoadingState());
       emit(SignUpRegistrationFailedState(errors: response.errors!));
     }
   }

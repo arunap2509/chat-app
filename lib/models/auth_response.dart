@@ -1,11 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class RegisterResponse {
+class AuthResponse {
   final String userId;
   final String refreshToken;
   final String accessToken;
-  RegisterResponse({
+  AuthResponse({
     required this.userId,
     required this.refreshToken,
     required this.accessToken,
@@ -19,8 +18,8 @@ class RegisterResponse {
     };
   }
 
-  factory RegisterResponse.fromMap(Map<String, dynamic> map) {
-    return RegisterResponse(
+  factory AuthResponse.fromMap(Map<String, dynamic> map) {
+    return AuthResponse(
       userId: map['userId'] as String,
       refreshToken: map['refreshToken'] as String,
       accessToken: map['accessToken'] as String,
@@ -29,5 +28,6 @@ class RegisterResponse {
 
   String toJson() => json.encode(toMap());
 
-  factory RegisterResponse.fromJson(String source) => RegisterResponse.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory AuthResponse.fromJson(String source) =>
+      AuthResponse.fromMap(json.decode(source) as Map<String, dynamic>);
 }

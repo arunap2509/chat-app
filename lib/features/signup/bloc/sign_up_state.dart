@@ -10,6 +10,8 @@ class SignUpInitial extends SignUpState {}
 
 class SignUpRegistrationLoadingState extends SignUpState {}
 
+class SignUpRegistrationHideLoadingState extends SignUpState {}
+
 class SignUpRegistrationFailedState extends SignUpActionState {
   final List<String> errors;
   SignUpRegistrationFailedState({

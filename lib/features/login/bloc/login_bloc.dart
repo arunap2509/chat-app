@@ -1,28 +1,34 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:chat_like_app/models/login_request.dart';
+import 'package:chat_like_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(LoginInitial()) {
+  final AuthService authService;
+  LoginBloc({required this.authService}) : super(LoginInitial()) {
     on<LoginButtonClickedEvent>(loginButtonClickedEvent);
     on<ForgotPasswordButtonClickedEvent>(forgotPasswordButtonClickedEvent);
     on<SignUpButtonClickedEvent>(signUpButtonClickedEvent);
   }
 
   FutureOr<void> loginButtonClickedEvent(
-      LoginButtonClickedEvent event, Emitter<LoginState> emit) {
-    // emit(LoginAuthenticationLoadingState());
-    // call the api
+      LoginButtonClickedEvent event, Emitter<LoginState> emit) async {
+    emit(LoginAuthenticationLoadingState());
 
-    // if success 200
-    emit(LoginAuthenticationSuccessState());
-    // print(event.password + event.userName);
-    // if error
-    //emit(LoginAuthenticationErrorState());
+    var response = await authService.login(
+      LoginRequest(userName: event.userName, password: event.password),
+    );
+
+    if (response.data != null) {
+      emit(LoginAuthenticationSuccessState(userId: response.data!.userId));
+    } else {
+      emit(LoginAuthenticationErrorState(errors: response.errors!));
+    }
   }
 
   FutureOr<void> signUpButtonClickedEvent(

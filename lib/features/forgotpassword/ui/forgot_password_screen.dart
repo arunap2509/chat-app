@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:chat_like_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import '../bloc/forgot_password_bloc.dart';
 import '../forgot_password_page_stage_enum.dart';
@@ -23,7 +25,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   late TextEditingController emailController;
   late TextEditingController newPasswordController;
   late TextEditingController confirmPasswordController;
-  final ForgotPasswordBloc bloc = ForgotPasswordBloc();
 
   bool enableSubmit = false;
   String otpValue = '';
@@ -60,6 +61,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc =
+        ForgotPasswordBloc(authService: Provider.of<AuthService>(context));
     return BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
       bloc: bloc,
       listenWhen: (previous, current) => current is ForgotPasswordActionState,

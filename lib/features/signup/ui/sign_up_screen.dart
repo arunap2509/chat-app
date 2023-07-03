@@ -1,6 +1,8 @@
 import 'package:chat_like_app/home_screen.dart';
+import 'package:chat_like_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import '../../../common/component/input_field.dart';
 import '../bloc/sign_up_bloc.dart';
@@ -16,7 +18,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late TextEditingController userNameController;
   late TextEditingController passwordController;
   late TextEditingController emailController;
-  final SignUpBloc signupBloc = SignUpBloc();
   @override
   void initState() {
     super.initState();
@@ -48,8 +49,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = SignUpBloc(authService: Provider.of<AuthService>(context));
     return BlocConsumer<SignUpBloc, SignUpState>(
-      bloc: signupBloc,
+      bloc: bloc,
       listenWhen: (previous, current) => current is SignUpActionState,
       buildWhen: (previous, current) => current is! SignUpActionState,
       listener: (context, state) {
@@ -57,25 +59,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _navigateToLoginPage();
         } else if (state is SignUpRegistrationFailedState) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Column(
-                children: [
-                  for (int i = 0; i < state.errors.length; i++)
-                    Row(children: [
-                      const Text("\u2022"),
-                      const SizedBox(
-                        width: 4,
-                      ),
-                      Expanded(
-                        child: Text(
-                          state.errors[i],
-                        ), //text
-                      )
-                    ])
-                ],
-              ),
-              backgroundColor: Colors.red.shade300,
-            ),
+            errorSnackBar(state),
           );
         } else if (state is SignUpRegistrationSuccessState) {
           _navigateToHomePage();
@@ -84,24 +68,47 @@ class _SignUpScreenState extends State<SignUpScreen> {
       builder: (context, state) {
         switch (state.runtimeType) {
           case SignUpInitial:
+          case SignUpRegistrationHideLoadingState:
             return SignUpPage(
               emailController: emailController,
               userNameController: userNameController,
               passwordController: passwordController,
-              signupBloc: signupBloc,
+              signupBloc: bloc,
             );
           case SignUpRegistrationLoadingState:
-            return Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.white.withOpacity(0.1),
-                ),
-              ),
+            return SignUpPage(
+              emailController: emailController,
+              userNameController: userNameController,
+              passwordController: passwordController,
+              signupBloc: bloc,
+              showLoadingScreen: true,
             );
           default:
             return Container();
         }
       },
+    );
+  }
+
+  SnackBar errorSnackBar(SignUpRegistrationFailedState state) {
+    return SnackBar(
+      content: Column(
+        children: [
+          for (int i = 0; i < state.errors.length; i++)
+            Row(children: [
+              const Text("\u2022"),
+              const SizedBox(
+                width: 4,
+              ),
+              Expanded(
+                child: Text(
+                  state.errors[i],
+                ), //text
+              )
+            ])
+        ],
+      ),
+      backgroundColor: Colors.red.shade300,
     );
   }
 }
@@ -113,12 +120,14 @@ class SignUpPage extends StatefulWidget {
     required this.userNameController,
     required this.passwordController,
     required this.signupBloc,
+    this.showLoadingScreen = false,
   });
 
   final TextEditingController emailController;
   final TextEditingController userNameController;
   final TextEditingController passwordController;
   final SignUpBloc signupBloc;
+  final bool showLoadingScreen;
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -150,113 +159,123 @@ class _SignUpPageState extends State<SignUpPage> {
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.grey.shade300,
         body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).size.height * 0.2,
-              left: 24,
-              right: 24,
-              bottom: 24,
-            ),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 60,
-                  width: double.maxFinite,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "SignUp",
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green.shade400,
-                        ),
-                      ),
-                    ],
-                  ),
+          child: Stack(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.2,
+                  left: 24,
+                  right: 24,
+                  bottom: 24,
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
-                InputField(
-                  placeholder: 'Email',
-                  controller: widget.emailController,
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                InputField(
-                  placeholder: 'UserName',
-                  controller: widget.userNameController,
-                ),
-                const SizedBox(
-                  height: 8,
-                ),
-                InputField(
-                  controller: widget.passwordController,
-                  isPassword: true,
-                  placeholder: 'Password',
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                Container(
-                  height: 40,
-                  width: 240,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: FilledButton(
-                    onPressed: handleSignupButtonClick,
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(
-                        Colors.green.shade400,
-                      ),
-                    ),
-                    child: const Text(
-                      "SignUp",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 6,
-                ),
-                SizedBox(
-                  height: 20,
-                  width: double.maxFinite,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Row(
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: 60,
+                      width: double.maxFinite,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text("Already have an account? "),
-                          GestureDetector(
-                            onTap: () {
-                              widget.signupBloc.add(
-                                SignUpLoginButtonClickedEvent(),
-                              );
-                            },
-                            child: Text(
-                              "Login",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                                color: Colors.green.shade400,
-                              ),
+                          Text(
+                            "SignUp",
+                            style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green.shade400,
                             ),
                           ),
                         ],
-                      )
-                    ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    InputField(
+                      placeholder: 'Email',
+                      controller: widget.emailController,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    InputField(
+                      placeholder: 'UserName',
+                      controller: widget.userNameController,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    InputField(
+                      controller: widget.passwordController,
+                      isPassword: true,
+                      placeholder: 'Password',
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Container(
+                      height: 40,
+                      width: 240,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: FilledButton(
+                        onPressed: handleSignupButtonClick,
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStatePropertyAll<Color>(
+                            Colors.green.shade400,
+                          ),
+                        ),
+                        child: const Text(
+                          "SignUp",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 6,
+                    ),
+                    SizedBox(
+                      height: 20,
+                      width: double.maxFinite,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              const Text("Already have an account? "),
+                              GestureDetector(
+                                onTap: () {
+                                  widget.signupBloc.add(
+                                    SignUpLoginButtonClickedEvent(),
+                                  );
+                                },
+                                child: Text(
+                                  "Login",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline,
+                                    color: Colors.green.shade400,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              if (widget.showLoadingScreen)
+                Center(
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.white.withOpacity(0.1),
                   ),
-                )
-              ],
-            ),
+                ),
+            ],
           ),
         ),
       ),
