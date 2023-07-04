@@ -27,6 +27,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (response.data != null) {
       emit(LoginAuthenticationSuccessState(userId: response.data!.userId));
     } else {
+      emit(LoginAuthenticationHideLoadingState());
       emit(LoginAuthenticationErrorState(errors: response.errors!));
     }
   }

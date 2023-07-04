@@ -43,58 +43,47 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Listener(
-      onPointerDown: (event) {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
-      child: SafeArea(
-        child: Padding(
-          padding:
-              const EdgeInsets.only(top: 60, left: 20, right: 20, bottom: 20),
-          child: Column(
-            children: [
-              InputField(
-                controller: widget.newPasswordController,
-                isPassword: true,
-                placeholder: 'New Password',
+    return Column(
+      children: [
+        InputField(
+          controller: widget.newPasswordController,
+          isPassword: true,
+          placeholder: 'New Password',
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        InputField(
+          controller: widget.confirmPasswordController,
+          isPassword: true,
+          placeholder: 'Confirm Password',
+        ),
+        const SizedBox(
+          height: 40,
+        ),
+        Container(
+          height: 40,
+          width: 240,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: FilledButton(
+            onPressed: handleChangePasswordButtonClick,
+            style: ButtonStyle(
+              backgroundColor: MaterialStatePropertyAll<Color>(
+                Colors.green.shade400,
               ),
-              const SizedBox(
-                height: 8,
+            ),
+            child: const Text(
+              "Change Password",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.normal,
               ),
-              InputField(
-                controller: widget.confirmPasswordController,
-                isPassword: true,
-                placeholder: 'Confirm Password',
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              Container(
-                height: 40,
-                width: 240,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: FilledButton(
-                  onPressed: handleChangePasswordButtonClick,
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStatePropertyAll<Color>(
-                      Colors.green.shade400,
-                    ),
-                  ),
-                  child: const Text(
-                    "Change Password",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

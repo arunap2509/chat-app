@@ -10,6 +10,8 @@ class ForgotPasswordInitial extends ForgotPasswordState {}
 
 class ForgotPasswordLoadingState extends ForgotPasswordState {}
 
+class ForgotPasswordHideLoadingState extends ForgotPasswordState {}
+
 class ForgotPasswordErrorState extends ForgotPasswordActionState {
   final String errorMessage;
   ForgotPasswordErrorState({

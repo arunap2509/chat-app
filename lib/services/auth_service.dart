@@ -68,13 +68,15 @@ class AuthService {
   }
 
   Future<bool> sendOtp(String email) async {
-    var url = Uri.parse("${baseUrl}auth/verify-email");
+    var url = Uri.parse("${baseUrl}auth/send-otp");
+
+    var encoded = jsonEncode({'email': email});
 
     try {
       var response = await http.post(
         url,
         headers: {"content-type": "application/json; charset=UTF-8"},
-        body: {'email': email},
+        body: encoded,
       );
 
       if (response.statusCode == 200) {
@@ -90,11 +92,13 @@ class AuthService {
   Future<bool> verifyOtp(String email, String otp) async {
     var url = Uri.parse("${baseUrl}auth/verify-otp");
 
+    var encoded = jsonEncode({'email': email, 'otp': otp});
+
     try {
       var response = await http.post(
         url,
         headers: {"content-type": "application/json; charset=UTF-8"},
-        body: {'email': email, 'otp': otp},
+        body: encoded,
       );
 
       if (response.statusCode == 200) {
@@ -110,11 +114,13 @@ class AuthService {
   Future<bool> changePassword(String email, String newPassword) async {
     var url = Uri.parse("${baseUrl}auth/forgot-password");
 
+    var encoded = jsonEncode({'email': email, 'newPassword': newPassword});
+
     try {
       var response = await http.post(
         url,
         headers: {"content-type": "application/json; charset=UTF-8"},
-        body: {'email': email, 'newPassword': newPassword},
+        body: encoded,
       );
 
       if (response.statusCode == 200) {

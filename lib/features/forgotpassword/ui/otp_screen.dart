@@ -73,81 +73,75 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding:
-            const EdgeInsets.only(top: 60, left: 20, right: 20, bottom: 20),
-        child: Column(
+    return Column(
+      children: [
+        const Text(
+          "Please enter the otp that you have received in your registered email address",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontWeight: FontWeight.w200,
+            letterSpacing: 2,
+          ),
+        ),
+        const SizedBox(
+          height: 30,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
-              "Please enter the otp that you have received in your registered email address",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontWeight: FontWeight.w200,
-                letterSpacing: 2,
-              ),
+            OtpInput(
+              controller: widget.firstDigitController,
+              isFirstField: true,
             ),
             const SizedBox(
-              height: 30,
+              width: 10,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                OtpInput(
-                  controller: widget.firstDigitController,
-                  isFirstField: true,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                OtpInput(
-                  controller: widget.secondDigitController,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                OtpInput(
-                  controller: widget.thirdDigitController,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                OtpInput(
-                  controller: widget.fourthDigitController,
-                  isLastField: true,
-                ),
-              ],
+            OtpInput(
+              controller: widget.secondDigitController,
             ),
             const SizedBox(
-              height: 40,
+              width: 10,
             ),
-            Container(
-              height: 40,
-              width: 240,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: FilledButton(
-                onPressed: enableSubmit ? handleSubmitButtonClick : null,
-                style: ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll<Color>(
-                    Colors.green.shade400,
-                  ),
-                  // elevation: const MaterialStatePropertyAll<double>(1),
-                  // splashFactory: NoSplash.splashFactory,
-                ),
-                child: const Text(
-                  "Submit",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              ),
+            OtpInput(
+              controller: widget.thirdDigitController,
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            OtpInput(
+              controller: widget.fourthDigitController,
+              isLastField: true,
             ),
           ],
         ),
-      ),
+        const SizedBox(
+          height: 40,
+        ),
+        Container(
+          height: 40,
+          width: 240,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: FilledButton(
+            onPressed: enableSubmit ? handleSubmitButtonClick : null,
+            style: ButtonStyle(
+              backgroundColor: MaterialStatePropertyAll<Color>(
+                Colors.green.shade400,
+              ),
+              // elevation: const MaterialStatePropertyAll<double>(1),
+              // splashFactory: NoSplash.splashFactory,
+            ),
+            child: const Text(
+              "Submit",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

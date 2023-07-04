@@ -28,8 +28,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
 
   bool enableSubmit = false;
   String otpValue = '';
-  bool otpSend = false;
-  bool otpVerfied = false;
+  var currentPageState = ForgotPasswordPageStage.verifyEmail;
+  bool showLoader = false;
+  String email = '';
 
   @override
   void initState() {
@@ -82,54 +83,41 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       builder: (context, state) {
         switch (state.runtimeType) {
           case ForgotPasswordInitial:
-            return ForgotPasswordPage(
-              pageStage: ForgotPasswordPageStage.verifyEmail,
-              firstDigitController: firstDigitController,
-              secondDigitController: secondDigitController,
-              thirdDigitController: thirdDigitController,
-              fourthDigitController: fourthDigitController,
-              emailController: emailController,
-              newPasswordController: newPasswordController,
-              confirmPasswordController: confirmPasswordController,
-              forgotPasswordBloc: bloc,
-            );
+            currentPageState = ForgotPasswordPageStage.verifyEmail;
+            showLoader = false;
+            break;
           case ForgotPasswordSendOtpSuccessState:
             final successState = state as ForgotPasswordSendOtpSuccessState;
-            return ForgotPasswordPage(
-              pageStage: ForgotPasswordPageStage.otp,
-              firstDigitController: firstDigitController,
-              secondDigitController: secondDigitController,
-              thirdDigitController: thirdDigitController,
-              fourthDigitController: fourthDigitController,
-              emailController: emailController,
-              newPasswordController: newPasswordController,
-              confirmPasswordController: confirmPasswordController,
-              forgotPasswordBloc: bloc,
-              email: successState.email,
-            );
+            currentPageState = ForgotPasswordPageStage.otp;
+            showLoader = false;
+            email = successState.email;
+            break;
           case ForgotPasswordSubmitSuccessState:
             final successState = state as ForgotPasswordSubmitSuccessState;
-            return ForgotPasswordPage(
-              pageStage: ForgotPasswordPageStage.changePassword,
-              firstDigitController: firstDigitController,
-              secondDigitController: secondDigitController,
-              thirdDigitController: thirdDigitController,
-              fourthDigitController: fourthDigitController,
-              emailController: emailController,
-              newPasswordController: newPasswordController,
-              confirmPasswordController: confirmPasswordController,
-              forgotPasswordBloc: bloc,
-              email: successState.email,
-            );
+            currentPageState = ForgotPasswordPageStage.changePassword;
+            showLoader = false;
+            email = successState.email;
+            break;
           case ForgotPasswordLoadingState:
-            return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          default:
-            return Container();
+            showLoader = true;
+            break;
+          case ForgotPasswordHideLoadingState:
+            showLoader = false;
+            break;
         }
+        return ForgotPasswordPage(
+          pageStage: currentPageState,
+          firstDigitController: firstDigitController,
+          secondDigitController: secondDigitController,
+          thirdDigitController: thirdDigitController,
+          fourthDigitController: fourthDigitController,
+          emailController: emailController,
+          newPasswordController: newPasswordController,
+          confirmPasswordController: confirmPasswordController,
+          forgotPasswordBloc: bloc,
+          showLoader: showLoader,
+          email: email,
+        );
       },
     );
   }
@@ -146,6 +134,7 @@ class ForgotPasswordPage extends StatefulWidget {
   final TextEditingController confirmPasswordController;
   final ForgotPasswordBloc forgotPasswordBloc;
   final String email;
+  final bool showLoader;
   const ForgotPasswordPage({
     Key? key,
     required this.pageStage,
@@ -158,6 +147,7 @@ class ForgotPasswordPage extends StatefulWidget {
     required this.confirmPasswordController,
     required this.forgotPasswordBloc,
     this.email = '',
+    this.showLoader = false,
   }) : super(key: key);
 
   @override
@@ -182,7 +172,26 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           ),
         ),
       ),
-      body: getBody(),
+      body: Listener(
+        onPointerDown: (event) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: SafeArea(
+          child: Padding(
+            padding:
+                const EdgeInsets.only(top: 60, left: 20, right: 20, bottom: 20),
+            child: Stack(
+              children: [
+                getBody(),
+                if (widget.showLoader)
+                  const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 

@@ -10,6 +10,8 @@ class LoginInitial extends LoginState {}
 
 class LoginAuthenticationLoadingState extends LoginState {}
 
+class LoginAuthenticationHideLoadingState extends LoginState {}
+
 class LoginAuthenticationSuccessState extends LoginActionState {
   final String userId;
   LoginAuthenticationSuccessState({

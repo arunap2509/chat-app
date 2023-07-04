@@ -26,6 +26,7 @@ class ForgotPasswordBloc
         ForgotPasswordSendOtpSuccessState(email: event.email),
       );
     } else {
+      emit(ForgotPasswordHideLoadingState());
       emit(
         ForgotPasswordErrorState(errorMessage: "Invalid email address"),
       );
@@ -41,6 +42,7 @@ class ForgotPasswordBloc
         ForgotPasswordSubmitSuccessState(email: event.email),
       );
     } else {
+      emit(ForgotPasswordHideLoadingState());
       emit(
         ForgotPasswordErrorState(errorMessage: "Please enter valid otp"),
       );
@@ -57,6 +59,7 @@ class ForgotPasswordBloc
     if (response) {
       emit(ForgotPasswordChangePasswordSuccessState());
     } else {
+      emit(ForgotPasswordHideLoadingState());
       emit(
         ForgotPasswordErrorState(
           errorMessage: "Something went wrong, please try again after sometime",
