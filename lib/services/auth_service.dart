@@ -26,9 +26,9 @@ class AuthService {
       var responseData = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode >= 200 && response.statusCode <= 300) {
         var model = AuthResponse.fromMap(responseData);
-        appStoreBloc.updateAccessToken(model.accessToken);
-        appStoreBloc.updateRefreshToken(model.refreshToken);
-        appStoreBloc.updateUserId(model.userId);
+        await appStoreBloc.updateAccessToken(model.accessToken);
+        await appStoreBloc.updateRefreshToken(model.refreshToken);
+        await appStoreBloc.updateUserId(model.userId);
         return ApiResponse(success: true, data: model, errors: []);
       }
 
@@ -56,9 +56,9 @@ class AuthService {
       var responseData = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode >= 200 && response.statusCode <= 300) {
         var model = AuthResponse.fromMap(responseData);
-        appStoreBloc.updateAccessToken(model.accessToken);
-        appStoreBloc.updateRefreshToken(model.refreshToken);
-        appStoreBloc.updateUserId(model.userId);
+        await appStoreBloc.updateRefreshToken(model.refreshToken);
+        await appStoreBloc.updateAccessToken(model.accessToken);
+        await appStoreBloc.updateUserId(model.userId);
         return ApiResponse(success: true, data: model, errors: []);
       }
       return _handleError(responseData);
@@ -148,7 +148,7 @@ class AuthService {
       var responseData = jsonDecode(response.body) as Map<String, dynamic>;
       if (response.statusCode >= 200 && response.statusCode <= 300) {
         var accessToken = responseData['accessToken'] as String;
-        appStoreBloc.updateAccessToken(accessToken);
+        await appStoreBloc.updateAccessToken(accessToken);
         return accessToken;
       }
 

@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:bloc/bloc.dart';
+import 'package:chat_like_app/utils/app_constants.dart';
+import 'package:chat_like_app/utils/device_storage.dart';
 
 class Store {
   final String accessToken;
@@ -44,30 +46,36 @@ class Store {
 
 class AppStoreBloc extends Cubit<Store> {
   static final AppStoreBloc instance = AppStoreBloc._internal();
-
+  DeviceStorage deviceStorage = DeviceStorage();
   factory AppStoreBloc() {
     return instance;
   }
 
   AppStoreBloc._internal() : super(Store.getInitalState());
 
-  void updateAccessToken(String accessToken) {
+  Future updateAccessToken(String accessToken) async {
     emit(state.copyWith(accessToken: accessToken));
+    await deviceStorage.saveStringValue(AppConstants.accessToken, accessToken);
   }
 
-  void updateRefreshToken(String refreshToken) {
+  Future updateRefreshToken(String refreshToken) async {
     emit(state.copyWith(refreshToken: refreshToken));
+    await deviceStorage.saveStringValue(
+        AppConstants.refreshToken, refreshToken);
   }
 
-  void updateEmail(String email) {
+  Future updateEmail(String email) async {
     emit(state.copyWith(email: email));
+    await deviceStorage.saveStringValue(AppConstants.email, email);
   }
 
-  void updateUserName(String userName) {
+  Future updateUserName(String userName) async {
     emit(state.copyWith(userName: userName));
+    await deviceStorage.saveStringValue(AppConstants.userName, userName);
   }
 
-  void updateUserId(String userId) {
+  Future updateUserId(String userId) async {
     emit(state.copyWith(userId: userId));
+    await deviceStorage.saveStringValue(AppConstants.userId, userId);
   }
 }
