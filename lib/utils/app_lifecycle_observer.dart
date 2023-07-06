@@ -1,6 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:chat_like_app/features/login/ui/login_screen.dart';
-import 'package:chat_like_app/home_screen.dart';
 import 'package:chat_like_app/utils/app_constants.dart';
 import 'package:flutter/material.dart';
 
@@ -22,31 +19,14 @@ class AppLifeCycleObserver with WidgetsBindingObserver {
       case AppLifecycleState.resumed:
         await fetchDateFromDevice();
         if (appStoreBloc.state.accessToken.isEmpty) {
-          navigationState.currentState?.pushReplacement(
-            MaterialPageRoute(
-              builder: (_) => const LoginScreen(),
-            ),
-          );
+          navigationState.currentState?.pushReplacementNamed('/login');
         } else {
-          navigationState.currentState?.pushReplacement(
-            MaterialPageRoute(
-              builder: (_) => const HomeScreen(),
-            ),
-          );
+          navigationState.currentState?.pushNamed('/home');
         }
         break;
       case AppLifecycleState.inactive:
-        //print("app is inactive");
-        break;
       case AppLifecycleState.paused:
-        navigationState.currentState?.pushReplacement(
-          MaterialPageRoute(
-            builder: (_) => const LoginScreen(),
-          ),
-        );
-        break;
       case AppLifecycleState.detached:
-        //print("app is detached");
         break;
     }
   }

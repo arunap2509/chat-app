@@ -1,12 +1,9 @@
-import 'package:chat_like_app/features/signup/ui/sign_up_screen.dart';
-import 'package:chat_like_app/home_screen.dart';
 import 'package:chat_like_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/component/input_field.dart';
-import '../../forgotpassword/ui/forgot_password_screen.dart';
 import '../bloc/login_bloc.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -35,30 +32,15 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _navigateToForgotPassword() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ForgotPassword(),
-      ),
-    );
+    Navigator.pushNamed(context, '/forgot-password');
   }
 
   void _navigateToSignUp() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const SignUpScreen(),
-      ),
-    );
+    Navigator.pushNamed(context, '/sign-up');
   }
 
   void _navigateToHomeScreen() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
-      ),
-    );
+    Navigator.pushNamed(context, '/home');
   }
 
   @override

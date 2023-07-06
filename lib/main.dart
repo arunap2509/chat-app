@@ -1,4 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:chat_like_app/chat_screen.dart';
+import 'package:chat_like_app/features/forgotpassword/ui/forgot_password_screen.dart';
+import 'package:chat_like_app/features/signup/ui/sign_up_screen.dart';
+import 'package:chat_like_app/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -71,6 +75,22 @@ class _AppStartState extends State<AppStart> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: navigatorKey,
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => const LoginScreen(),
+        '/sign-up': (context) => const SignUpScreen(),
+        '/forgot-password': (context) => const ForgotPassword(),
+        '/home': (context) => const HomeScreen(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/chat') {
+          var arguments = settings.arguments as Map<String, String>;
+          return MaterialPageRoute(
+              builder: (context) => ChatScreen(name: arguments['userName']!));
+        }
+        assert(false, 'Need to implement ${settings.name}');
+        return null;
+      },
       home: const LoginScreen(),
     );
   }

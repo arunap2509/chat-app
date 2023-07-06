@@ -1,4 +1,3 @@
-import 'package:chat_like_app/home_screen.dart';
 import 'package:chat_like_app/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,12 +34,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _navigateToHomePage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
-      ),
-    );
+    Navigator.pushNamed(context, '/home');
   }
 
   void _navigateToLoginPage() {

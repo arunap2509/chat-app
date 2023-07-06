@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:chat_like_app/chat_screen.dart';
 import 'package:chat_like_app/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -176,13 +175,10 @@ class _HomeScreenState extends State<HomeScreen> {
         var dummyName = dummyNames[index];
         return GestureDetector(
           onTap: () {
-            Navigator.push(
+            Navigator.pushNamed(
               context,
-              MaterialPageRoute(
-                builder: (context) => ChatScreen(
-                  name: dummyName,
-                ),
-              ),
+              '/chat',
+              arguments: {'userName': dummyName},
             );
           },
           child: Container(
