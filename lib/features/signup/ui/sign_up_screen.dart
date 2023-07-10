@@ -17,12 +17,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   late TextEditingController userNameController;
   late TextEditingController passwordController;
   late TextEditingController emailController;
+  late TextEditingController phoneNumberController;
   @override
   void initState() {
     super.initState();
     userNameController = TextEditingController();
     passwordController = TextEditingController();
     emailController = TextEditingController();
+    phoneNumberController = TextEditingController();
   }
 
   @override
@@ -31,10 +33,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
     userNameController.dispose();
     passwordController.dispose();
     emailController.dispose();
+    phoneNumberController.dispose();
   }
 
-  void _navigateToHomePage() {
-    Navigator.pushNamed(context, '/home');
+  void _navigateToHomePage(String userId) {
+    Navigator.pushNamed(context, '/home', arguments: {'userId': userId},);
   }
 
   void _navigateToLoginPage() {
@@ -56,7 +59,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             errorSnackBar(state),
           );
         } else if (state is SignUpRegistrationSuccessState) {
-          _navigateToHomePage();
+          _navigateToHomePage(state.userId);
         }
       },
       builder: (context, state) {
@@ -67,6 +70,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               emailController: emailController,
               userNameController: userNameController,
               passwordController: passwordController,
+              phoneNumberController: phoneNumberController,
               signupBloc: bloc,
             );
           case SignUpRegistrationLoadingState:
@@ -74,6 +78,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               emailController: emailController,
               userNameController: userNameController,
               passwordController: passwordController,
+              phoneNumberController: phoneNumberController,
               signupBloc: bloc,
               showLoadingScreen: true,
             );
@@ -115,11 +120,13 @@ class SignUpPage extends StatefulWidget {
     required this.passwordController,
     required this.signupBloc,
     this.showLoadingScreen = false,
+    required this.phoneNumberController,
   });
 
   final TextEditingController emailController;
   final TextEditingController userNameController;
   final TextEditingController passwordController;
+  final TextEditingController phoneNumberController;
   final SignUpBloc signupBloc;
   final bool showLoadingScreen;
 
@@ -132,16 +139,24 @@ class _SignUpPageState extends State<SignUpPage> {
     final email = widget.emailController.text;
     final password = widget.passwordController.text;
     final username = widget.userNameController.text;
+    final phoneNumber = widget.phoneNumberController.text;
 
-    if (email.isEmpty || password.isEmpty || username.isEmpty) {
+    if (email.isEmpty ||
+        password.isEmpty ||
+        username.isEmpty ||
+        phoneNumber.isEmpty ||
+        phoneNumber.length != 10) {
       return;
     }
 
-    widget.signupBloc.add(SignUpButtonClickedEvent(
-      email: email,
-      password: password,
-      userName: username,
-    ));
+    widget.signupBloc.add(
+      SignUpButtonClickedEvent(
+        email: email,
+        password: password,
+        userName: username,
+        phoneNumber: phoneNumber,
+      ),
+    );
   }
 
   @override
@@ -187,6 +202,10 @@ class _SignUpPageState extends State<SignUpPage> {
                     InputField(
                       placeholder: 'Email',
                       controller: widget.emailController,
+                    ),
+                    InputField(
+                      placeholder: 'PhoneNumber',
+                      controller: widget.phoneNumberController,
                     ),
                     const SizedBox(
                       height: 8,

@@ -19,10 +19,16 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       SignUpButtonClickedEvent event, Emitter<SignUpState> emit) async {
     emit(SignUpRegistrationLoadingState());
     var request = RegisterRequest(
-        email: event.email, userName: event.userName, password: event.password);
+      email: event.email,
+      userName: event.userName,
+      password: event.password,
+      phoneNumber: event.phoneNumber,
+    );
     var response = await authService.register(request);
     if (response.success) {
-      emit(SignUpRegistrationSuccessState());
+      emit(
+        SignUpRegistrationSuccessState(userId: response.data!.userId),
+      );
     } else {
       emit(SignUpRegistrationHideLoadingState());
       emit(SignUpRegistrationFailedState(errors: response.errors!));

@@ -39,8 +39,8 @@ class _LoginScreenState extends State<LoginScreen> {
     Navigator.pushNamed(context, '/sign-up');
   }
 
-  void _navigateToHomeScreen() {
-    Navigator.pushNamed(context, '/home');
+  void _navigateToHomeScreen(String userId) {
+    Navigator.pushNamed(context, '/home', arguments: {'userId': userId});
   }
 
   @override
@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
         } else if (state is LoginNavigateToSignUp) {
           _navigateToSignUp();
         } else if (state is LoginAuthenticationSuccessState) {
-          _navigateToHomeScreen();
+          _navigateToHomeScreen(state.userId);
         } else if (state is LoginAuthenticationErrorState) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

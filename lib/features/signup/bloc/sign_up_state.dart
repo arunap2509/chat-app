@@ -19,6 +19,11 @@ class SignUpRegistrationFailedState extends SignUpActionState {
   });
 }
 
-class SignUpRegistrationSuccessState extends SignUpActionState {}
+class SignUpRegistrationSuccessState extends SignUpActionState {
+  final String userId;
+  SignUpRegistrationSuccessState({
+    required this.userId,
+  });
+}
 
 class SignUpNavigateToLoginPageState extends SignUpActionState {}

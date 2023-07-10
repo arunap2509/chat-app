@@ -1,8 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:chat_like_app/chat_screen.dart';
+import 'package:chat_like_app/features/chat/ui/chat_screen.dart';
 import 'package:chat_like_app/features/forgotpassword/ui/forgot_password_screen.dart';
 import 'package:chat_like_app/features/signup/ui/sign_up_screen.dart';
-import 'package:chat_like_app/home_screen.dart';
+import 'package:chat_like_app/websocket/websocket_connector.dart';
+import 'features/home/ui/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +36,9 @@ class MainApp extends StatelessWidget {
           create: (context) => AuthService(
             appStoreBloc: Provider.of<AppStoreBloc>(context, listen: false),
           ),
+        ),
+        Provider<Websocket>(
+          create: (context) => Websocket(),
         ),
       ],
       child: const AppStart(),
@@ -80,13 +84,16 @@ class _AppStartState extends State<AppStart> {
         '/login': (context) => const LoginScreen(),
         '/sign-up': (context) => const SignUpScreen(),
         '/forgot-password': (context) => const ForgotPassword(),
-        '/home': (context) => const HomeScreen(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/chat') {
           var arguments = settings.arguments as Map<String, String>;
           return MaterialPageRoute(
               builder: (context) => ChatScreen(name: arguments['userName']!));
+        } else if (settings.name == '/home') {
+          var arguments = settings.arguments as Map<String, String>;
+          return MaterialPageRoute(
+              builder: (context) => HomeScreen(userId: arguments['userId']!));
         }
         assert(false, 'Need to implement ${settings.name}');
         return null;

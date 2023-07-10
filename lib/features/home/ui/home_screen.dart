@@ -1,12 +1,20 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:math';
 
-import 'package:chat_like_app/colors.dart';
+import 'package:chat_like_app/websocket/websocket_connector.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
+import 'package:chat_like_app/colors.dart';
+
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final String userId;
+  const HomeScreen({
+    Key? key,
+    required this.userId,
+  }) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -16,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var showTabBarTitle = false;
   final dummyNames = ["Arun AP", "Jessica", "Jordan", "Chris"];
   final random = Random(42);
+  late Websocket websocket;
 
   void handleShowTabBarTitle(bool isVisible) {
     setState(() {
@@ -36,6 +45,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    websocket = Provider.of<Websocket>(context, listen: false);
+    websocket.connect(widget.userId);
     return Scaffold(
       backgroundColor: appBackgroundColor,
       appBar: AppBar(
@@ -53,7 +64,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         centerTitle: true,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            websocket.send();
+          },
           icon: const Text(
             "Edit",
             style: TextStyle(

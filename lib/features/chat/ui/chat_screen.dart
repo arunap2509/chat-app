@@ -2,7 +2,7 @@ import 'package:chat_like_app/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'chat_box.dart';
+import '../../../chat_box.dart';
 
 class ChatScreen extends StatefulWidget {
   final String name;
